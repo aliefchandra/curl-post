@@ -1,5 +1,5 @@
 <?php
-
+//HANYA BISA MENGGUNAKAN XAMPP
 //Upload a blank cookie.txt to the same directory as this file with a CHMOD/Permission to 777
 function login($url,$data){
     $fp = fopen("cookie.txt", "w");
@@ -26,12 +26,13 @@ function login($url,$data){
 function grab_page($site){
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+    curl_setopt ($ch, CURLOPT_CAINFO, getcwd().'/cacert.pem');
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
     curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
     curl_setopt($ch, CURLOPT_TIMEOUT, 40);
-    curl_setopt($ch, CURLOPT_COOKIEFILE, "cookie.txt");
+    //curl_setopt($ch, CURLOPT_COOKIEFILE, "cookie.txt");
     curl_setopt($ch, CURLOPT_URL, $site);
     ob_start();
     return curl_exec ($ch);
@@ -57,10 +58,18 @@ function post_data($site,$data){
     unset($datapost);    
 }
 function cek_error($result){
-    if ( $result === false){
-        echo 'cURL Error: ' . curl_error($result_curl); //echoes last session error
+    if ( $result == false){
+        echo 'cURL Error: ' . curl_error($result); //echoes last session error
     }
 }
+function cek_err_no($result){
+    if ( $result == false){
+        echo 'cURL Error: ' . curl_errno($result); //echoes last session error
+    }
+}
+$res = grab_page('https://www.tokopedia.com') ;
+echo $res ;
+cek_error($res) ;
 
 
 ?>
